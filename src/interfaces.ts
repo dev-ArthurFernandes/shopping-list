@@ -1,10 +1,17 @@
-export interface iShopList{
-    id: number,
-    lsitName: string,
-    data: Array<iData>
+interface iShopListRequest{
+    listname: string,
+    data: Array<iData> | Array<never>
 }
 
-export interface iData{
+interface iShopList extends iShopListRequest{
+    id: number,
+}
+
+interface iData{
     name: string,
     quantity: string
 }
+
+type ShopListRequiredKeys = "listName" | "data"
+
+export {iShopListRequest, iShopList, iData, ShopListRequiredKeys}
