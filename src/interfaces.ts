@@ -1,10 +1,10 @@
-export interface iList{
-    id: Number,
-    lsitName: String,
+export interface iShopList{
+    id: number,
+    lsitName: string,
     data: Array<iData>
 }
 
 export interface iData{
-    name: String,
-    quantity: String
+    name: string,
+    quantity: string
 }
