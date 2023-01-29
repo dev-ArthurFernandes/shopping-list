@@ -14,4 +14,6 @@ interface iData{
 
 type ShopListRequiredKeys = "listName" | "data"
 
-export {iShopListRequest, iShopList, iData, ShopListRequiredKeys}
+type dataRequiredKeys = "name" | "quantity"
+
+export {iShopListRequest, iShopList, iData, ShopListRequiredKeys, dataRequiredKeys}
