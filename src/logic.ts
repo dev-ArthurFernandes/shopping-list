@@ -1,4 +1,4 @@
-import { iShopList, iShopListRequest, ShopListRequiredKeys } from "./interfaces";
+import { iShopList, iShopListRequest, ShopListRequiredKeys, iData } from "./interfaces";
 import { Request, Response } from "express";
 import list from "./database";
 
@@ -18,18 +18,22 @@ const validateDataOrder = (payload: any): iShopListRequest => {
         throw new Error(`Required keys are: ${requiredKeys}`)
     }
 
-    const  validateKeyType: boolean = requiredKeys.every((key: any) => {
-        return isNaN(key)
-    })
-
-    if(!validateKeyType){
-        throw new Error("All keys must be a string")
-    }
-
-    if(payload.listName === ''){
+    if(payload.listName === '' || payload.listName === undefined){
         throw new Error("List name is required")
     }
 
+    const validateListName = isNaN(payload.listName)
+
+    const validateData: boolean = Array.isArray(payload.data)
+
+    if(!validateData){
+        throw new Error("Data must be an Array")
+    }
+
+    if(!validateListName){
+        throw new Error("List name must be an string")
+    }
+    
     return payload
 }
 
@@ -64,4 +68,20 @@ export const createShopListOrder = (request: Request, response: Response): Respo
 
 export const showShopList = (request: Request, response: Response): Response => {
     return response.status(200).json(list)
+}
+
+export const retriveShopList = (request: Request, response: Response): Response => {
+
+    const id: number = parseInt(request.params.id)
+
+    const indexShopList = list.findIndex(element => element.id === id)
+    console.log(indexShopList)
+
+    if(indexShopList === -1){
+        return response.status(404).json({
+            message: "Id don't exist"
+        })
+    }
+
+    return response.status(200).json(list[indexShopList])
 }
