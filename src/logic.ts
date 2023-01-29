@@ -6,18 +6,6 @@ let id: number = 1
 
 const validateDataOrder = (payload: any): iShopListRequest => {
 
-    const keys: Array<string> = Object.keys(payload)
-    
-    const requiredKeys: Array<ShopListRequiredKeys> = ["listName", "data"] 
-
-    const containAllKeys: boolean = requiredKeys.every((key: string) => {
-        return keys.includes(key)
-    })
-
-    if(!containAllKeys){
-        throw new Error(`Required keys are: ${requiredKeys}`)
-    }
-
     if(payload.listName === '' || payload.listName === undefined){
         throw new Error("List name is required")
     }
@@ -38,9 +26,9 @@ const validateDataOrder = (payload: any): iShopListRequest => {
 }
 
 export const createShopListOrder = (request: Request, response: Response): Response => {
-    console.log(request.body)
+   
     try {
-        const listRequest: iShopListRequest = validateDataOrder(request.body)
+        const listRequest: iShopListRequest = request.body
 
 
         const shopList: iShopList = {
