@@ -1,5 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import { dataRequiredKeys, ShopListRequiredKeys } from "./interfaces";
+import { NextFunction, request, Request, Response } from "express";
+import list from "./database";
+import { iShopList, ShopListRequiredKeys } from "./interfaces";
 
 
 
@@ -22,11 +23,42 @@ export const orderContaiAllKeys = (request: Request, response: Response, next: N
     return next()
 }
 
-export const dataContaiAllKeys = (request: Request, response: Response, next: NextFunction): Response | void => {
+export const validateId = (request: Request, response: Response, next: NextFunction): Response | void => {
 
-    const requiredKeys: Array<dataRequiredKeys> = ["name", "quantity"]
+    const id = parseInt(request.params.id)
 
-    
+    const IDIsTrue: boolean = list.every((item: iShopList ) => {
+        return item.id === id
+    })
+
+    if(!IDIsTrue){
+        return response.status(404).json({
+            message: "Id don`t exist"
+        })
+    }
 
     return next()
 }
+
+export const validateName = (request: Request, response: Response, next: NextFunction): Response | void => {
+    
+    const name: string = request.params.name
+
+    const id: number = parseInt(request.params.id)
+
+    list.map((element: any) => {
+        if(element.id === id){
+            element.data.map((item: any )=> {
+                const itemExist = item.name.toLowerCase() === name.toLowerCase()
+                if(itemExist){
+                    return next()
+                }
+            })
+        }
+    })
+
+    return response.status(404).json({
+        message: "Name not found"
+    })
+}
+
