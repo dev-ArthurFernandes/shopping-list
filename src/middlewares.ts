@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import { NextFunction, Request, Response } from "express";
-import { dataRequiredKeys, ShopListRequiredKeys } from "./interfaces";
-=======
 import { NextFunction, request, Request, response, Response } from "express";
 import list from "./database";
 import { dataRequiredKeys, iShopList, ShopListRequiredKeys } from "./interfaces";
->>>>>>> 43d8faf928ce3b9c397ac4d7239876ec308cf492
 
 
 
@@ -28,30 +23,21 @@ export const orderContaiAllKeys = (request: Request, response: Response, next: N
     return next()
 }
 
-<<<<<<< HEAD
-export const dataContaiAllKeys = (request: Request, response: Response, next: NextFunction): Response | void => {
-
-    const requiredKeys: Array<dataRequiredKeys> = ["name", "quantity"]
-
-    
-
-    return next()
-=======
 export const validateId = (request: Request, response: Response, next: NextFunction): Response | void => {
 
     const id = parseInt(request.params.id)
 
-    const IDIsTrue: boolean = list.every((item: iShopList ) => {
-        return item.id === id
+    console.log(id)
+
+    list.map((item: iShopList ) => {
+        if(item.id === id){
+            return next()
+        }
     })
 
-    if(!IDIsTrue){
-        return response.status(404).json({
-            message: "List not found"
-        })
-    }
-
-    return next()
+    return response.status(404).json({
+        message: "List not found"
+    })
 }
 
 export const validateShopListName = (request: Request, response: Response, next: NextFunction): Response | void => {
@@ -137,5 +123,4 @@ export const validateChangeItemKey = (request: Request, response: Response, next
         })
     }
     return next()
->>>>>>> 43d8faf928ce3b9c397ac4d7239876ec308cf492
 }

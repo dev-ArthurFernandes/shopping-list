@@ -4,27 +4,6 @@ import list from "./database";
 
 let id: number = 1
 
-const validateDataOrder = (payload: any): iShopListRequest => {
-
-    if(payload.listName === '' || payload.listName === undefined){
-        throw new Error("List name is required")
-    }
-
-    const validateListName = isNaN(payload.listName)
-
-    const validateData: boolean = Array.isArray(payload.data)
-
-    if(!validateData){
-        throw new Error("Data must be an Array")
-    }
-
-    if(!validateListName){
-        throw new Error("List name must be an string")
-    }
-    
-    return payload
-}
-
 export const createShopListOrder = (request: Request, response: Response): Response => {
    
     try {
@@ -86,7 +65,7 @@ export const deleteItem = (request: Request, response: Response): Response => {
     list.map((element) => {
         if(element.id === id){
             element.data.map(item => {
-                const itemIndex = element.data.findIndex(el => el.name === item.name)
+                const itemIndex = element.data.findIndex(el => el.name === name)
                 element.data.splice(itemIndex, 1)
             })
         }
