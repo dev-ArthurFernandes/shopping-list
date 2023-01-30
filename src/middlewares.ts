@@ -27,17 +27,17 @@ export const validateId = (request: Request, response: Response, next: NextFunct
 
     const id = parseInt(request.params.id)
 
-    const IDIsTrue: boolean = list.every((item: iShopList ) => {
-        return item.id === id
+    console.log(id)
+
+    list.map((item: iShopList ) => {
+        if(item.id === id){
+            return next()
+        }
     })
 
-    if(!IDIsTrue){
-        return response.status(404).json({
-            message: "List not found"
-        })
-    }
-
-    return next()
+    return response.status(404).json({
+        message: "List not found"
+    })
 }
 
 export const validateShopListName = (request: Request, response: Response, next: NextFunction): Response | void => {
