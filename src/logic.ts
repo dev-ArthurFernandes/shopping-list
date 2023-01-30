@@ -1,5 +1,5 @@
 import { iShopList, iShopListRequest, ShopListRequiredKeys, iData } from "./interfaces";
-import { Request, Response } from "express";
+import { request, Request, Response } from "express";
 import list from "./database";
 
 let id: number = 1
@@ -47,7 +47,6 @@ export const createShopListOrder = (request: Request, response: Response): Respo
                 message: error.message
             })
         }
-        console.log(error)
         return response.status(500).json({
             message: 'Internal server error'
         })
@@ -63,13 +62,36 @@ export const retriveShopList = (request: Request, response: Response): Response 
     const id: number = parseInt(request.params.id)
 
     const indexShopList = list.findIndex(element => element.id === id)
-    console.log(indexShopList)
-
-    if(indexShopList === -1){
-        return response.status(404).json({
-            message: "Id don't exist"
-        })
-    }
 
     return response.status(200).json(list[indexShopList])
+}
+
+export const deleteShopList = (request: Request, response: Response): Response => {
+
+    const id: number = parseInt(request.params.id)
+
+    const indexShopList = list.findIndex(element => element.id === id)
+
+    list.splice(indexShopList, 1)
+
+    return response.status(204).send()
+}
+
+export const deleteItem = (request: Request, response: Response) => {
+
+    const name: string = request.params.name
+
+    const id: number = parseInt(request.params.id)
+
+    list.map((element) => {
+        if(element.id === id){
+            element.data.map(item => {
+                const itemIndex = element.data.findIndex(el => el.name === item.name)
+                element.data.splice(itemIndex, 1)
+            })
+        }
+    })
+
+    return response.status(204).send()
+
 }
