@@ -1,6 +1,6 @@
-import { NextFunction, request, Request, Response } from "express";
+import { NextFunction, request, Request, response, Response } from "express";
 import list from "./database";
-import { iShopList, ShopListRequiredKeys } from "./interfaces";
+import { dataRequiredKeys, iShopList, ShopListRequiredKeys } from "./interfaces";
 
 
 
@@ -33,14 +33,14 @@ export const validateId = (request: Request, response: Response, next: NextFunct
 
     if(!IDIsTrue){
         return response.status(404).json({
-            message: "Id don`t exist"
+            message: "List not found"
         })
     }
 
     return next()
 }
 
-export const validateName = (request: Request, response: Response, next: NextFunction): Response | void => {
+export const validateShopListName = (request: Request, response: Response, next: NextFunction): Response | void => {
     
     const name: string = request.params.name
 
@@ -62,3 +62,65 @@ export const validateName = (request: Request, response: Response, next: NextFun
     })
 }
 
+export const validateDataKeys = (request: Request, response: Response, next: NextFunction):Response | void => {
+
+    const keys: Array<string> = Object.keys(request.body)
+    
+    const requiredKeys: Array<dataRequiredKeys> = ["name", "quantity"]
+
+    const containAllKeys: boolean = requiredKeys.every((key: string) => {
+        return keys.includes(key)
+    })
+
+    console.log(containAllKeys)
+
+    if(!containAllKeys){
+        return response.status(400).json({
+            message: `These keys are required: ${requiredKeys}`
+        })
+    }
+
+    return next()
+}
+
+export const validateChangeItemKey = (request: Request, response: Response, next: NextFunction): Response | void => {
+
+    const keys: Array<string> = Object.keys(request.body)
+
+    console.log(Object.keys(request.body))
+    
+    const requiredKeys: Array<dataRequiredKeys> = ["name", "quantity"]
+
+    console.log(keys)
+
+    const allKeysIsTrue: Array<boolean> = requiredKeys.map((key: string) => {
+        return keys.includes(key)
+    })
+
+    if(keys.length === 2){
+        if(allKeysIsTrue[0] && !allKeysIsTrue[1]){
+            return response.status(400).json({
+                message: "These keys are required: name or quantity"
+            })
+        }else if(!allKeysIsTrue[0] && allKeysIsTrue[1]){
+            return response.status(400).json({
+                message: "These keys are required: name or quantity"
+            })
+        }else if(!allKeysIsTrue[0] && !allKeysIsTrue[1]){
+            return response.status(400).json({
+                message: "These keys are required: name or quantity"
+            })
+        }
+    }else if(keys.length === 1){
+        if(!allKeysIsTrue[0]){
+            return response.status(400).json({
+                message: "These keys are required: name or quantity"
+            })
+        }
+    }else if(keys.length > 2){
+        return response.status(400).json({
+            message: "These keys are required: name or quantity"
+        })
+    }
+    return next()
+}
