@@ -97,6 +97,10 @@ export const validateChangeItemKey = (request: Request, response: Response, next
         return keys.includes(key)
     })
 
+    console.log(allKeysIsTrue)
+
+    console.log(keys.length)
+
     if(keys.length === 2){
         if(allKeysIsTrue[0] && !allKeysIsTrue[1]){
             return response.status(400).json({
@@ -112,7 +116,7 @@ export const validateChangeItemKey = (request: Request, response: Response, next
             })
         }
     }else if(keys.length === 1){
-        if(!allKeysIsTrue[0]){
+        if(!allKeysIsTrue[0] && !allKeysIsTrue[1]){
             return response.status(400).json({
                 message: "These keys are required: name or quantity"
             })
