@@ -77,7 +77,7 @@ export const deleteShopList = (request: Request, response: Response): Response =
     return response.status(204).send()
 }
 
-export const deleteItem = (request: Request, response: Response) => {
+export const deleteItem = (request: Request, response: Response): Response => {
 
     const name: string = request.params.name
 
@@ -94,4 +94,19 @@ export const deleteItem = (request: Request, response: Response) => {
 
     return response.status(204).send()
 
+}
+
+export const changeItem = (request: Request, response: Response): Response => {
+    
+    const id: number = parseInt(request.params.id)
+
+    const name: string = request.params.name
+
+    const indexShopList = list.findIndex(element => element.id === id)
+
+    const itemIndex = list[indexShopList].data.findIndex(el => el.name.toLowerCase() === name.toLowerCase())
+
+    list[indexShopList].data[itemIndex] = {...list[indexShopList].data[itemIndex], ...request.body}
+
+    return response.json(list[indexShopList].data[itemIndex])
 }
