@@ -83,6 +83,24 @@ export const validateDataKeys = (request: Request, response: Response, next: Nex
     return next()
 }
 
+export const validateDataValues = (request: Request, response: Response, next: NextFunction) => {
+
+    const checkValues = request.body.data.map((item: any) => {
+        const values: any = Object.values(item)
+        return values.every((value: any) => typeof value === "string")
+    })
+
+    console.log(checkValues)
+
+    if(checkValues.includes(false)){
+        return response.status(400).json({
+            message: "The values passed on the 'data' must be string!"
+        })
+    }
+
+    return next()
+}
+
 export const validateChangeItemKey = (request: Request, response: Response, next: NextFunction): Response | void => {
 
     const keys: Array<string> = Object.keys(request.body)
